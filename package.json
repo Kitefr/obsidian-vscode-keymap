@@ -18,7 +18,7 @@
     "markdown",
     "notes"
   ],
-  "author": "",
+  "author": "Yann Schmidt",
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^15.1.0",

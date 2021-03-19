@@ -1,112 +1,122 @@
-import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Plugin, MarkdownView } from "obsidian";
 
-interface MyPluginSettings {
-	mySetting: string;
-}
+export default class VScodeKeymapPlugin extends Plugin {
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
-}
+  // Lifecycle
+  // ---
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+  async onload() {
+    console.log("loading obsidian-vscode-keymap");
 
-	async onload() {
-		console.log('loading plugin');
+    this.addLinesVSCodeCommands();
+  }
 
-		await this.loadSettings();
+  onunload() {
+    console.log("unloading obsidian-vscode-keymap");
+  }
 
-		this.addRibbonIcon('dice', 'Sample Plugin', () => {
-			new Notice('This is a notice!');
-		});
+  // Sections Functions
+  // ---
 
-		this.addStatusBarItem().setText('Status Bar Text');
+  addLinesVSCodeCommands() {
+    // Copy Line Down - Shift + Alt + Down
+    this.addCommand({
+      id: "copy-line-down",
+      name: "Copy current line down",
+      callback: () => this.copyLineDown,
+      hotkeys: [
+        {
+          modifiers: ["Shift", "Alt"],
+          key: "Down",
+        },
+      ],
+    });
 
-		this.addCommand({
-			id: 'open-sample-modal',
-			name: 'Open Sample Modal',
-			// callback: () => {
-			// 	console.log('Simple Callback');
-			// },
-			checkCallback: (checking: boolean) => {
-				let leaf = this.app.workspace.activeLeaf;
-				if (leaf) {
-					if (!checking) {
-						new SampleModal(this.app).open();
-					}
-					return true;
-				}
-				return false;
-			}
-		});
+    // Copy Line Up - Shift + Alt + Up
+    this.addCommand({
+      id: "copy-line-up",
+      name: "Copy current line up",
+      callback: () => this.copyLineUp,
+      hotkeys: [
+        {
+          modifiers: ["Shift", "Alt"],
+          key: "Up",
+        },
+      ],
+    });
 
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+    // Insert Line Above - Ctrl + Shift + Enter
+    this.addCommand({
+      id: "insert-line-above",
+      name: "Insert a new line above",
+      callback: () => this.insertLineAbove,
+      hotkeys: [
+        {
+          modifiers: ["Ctrl", "Shift"],
+          key: "Up",
+        },
+      ],
+    });
 
-		this.registerCodeMirror((cm: CodeMirror.Editor) => {
-			console.log('codemirror', cm);
-		});
+    // Insert Line Below -  Ctrl + Enter
+    this.addCommand({
+      id: "insert-line-below",
+      name: "Insert a new line below",
+      callback: () => this.insertLineBelow,
+      hotkeys: [
+        {
+          modifiers: ["Ctrl", "Shift"],
+          key: "Down",
+        },
+      ],
+    });
 
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
+    // Move Line Down -  Alt + Down
+    this.addCommand({
+      id: "move-line-down",
+      name: "Move current line down",
+      callback: () => this.moveLineDown,
+      hotkeys: [
+        {
+          modifiers: ["Alt"],
+          key: "Down",
+        },
+      ],
+    });
 
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
-	}
+    // Move Line Up -  Alt + Up
+    this.addCommand({
+      id: "move-line-up",
+      name: "Move current line up",
+      callback: () => this.moveLineUp,
+      hotkeys: [
+        {
+          modifiers: ["Alt"],
+          key: "Up",
+        },
+      ],
+    });
+  }
 
-	onunload() {
-		console.log('unloading plugin');
-	}
+  // Private Functions
+  // ---
 
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
-
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
-}
-
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		let {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
-
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		let {containerEl} = this;
-
-		containerEl.empty();
-
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
-		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue('')
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
-	}
+  private copyLineDown() {
+    console.log("copy line down !");
+  }
+  private copyLineUp() {
+    console.log("copy line up !");
+  }
+  private insertLineAbove() {
+    console.log("insert line up !");
+  }
+  private insertLineBelow() {
+    console.log("insert line down !");
+  }
+  private moveLineDown() {
+    console.log("move line down !");
+  }
+  private moveLineUp() {
+    console.log("move line up !");
+  }
 }
