@@ -15,7 +15,7 @@ export default class VScodeKeymapPlugin extends Plugin {
     console.log("unloading obsidian-vscode-keymap");
   }
 
-  // Sections Functions
+  // Line Commands
   // ---
 
   addLinesVSCodeCommands() {
